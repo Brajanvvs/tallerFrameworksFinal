@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Citas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .form-group { margin-bottom: 10px; }
+        label { display: inline-block; width: 120px; }
+        .error { color: red; font-size: 12px; }
+        .btn { padding: 5px 10px; margin: 2px; text-decoration: none; }
+        .btn-edit { background-color: #4CAF50; color: white; }
+        .btn-delete { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Gestión de Citas</h1>
+
+    <form th:action="@{/view/citas/guardar}" th:object="${cita}" method="post">
+        <input type="hidden" th:field="*{id}">
+        
+        <div class="form-group">
+            <label>Fecha y Hora:</label>
+            <input type="datetime-local" th:field="*{dateHour}" step="1">
+        </div>
+        
+        <div class="form-group">
+            <label>Estado:</label>
+            <select th:field="*{state}">
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="CONFIRMADA">Confirmada</option>
+                <option value="CANCELADA">Cancelada</option>
+                <option value="COMPLETADA">Completada</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Cliente:</label>
+            <select th:field="*{clienteId}">
+                <option th:each="cli : ${clientes}" 
+                        th:value="${cli.id}" 
+                        th:text="${cli.name}"></option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Manicurista:</label>
+            <select th:field="*{manicuristaId}">
+                <option th:each="man : ${manicuristas}" 
+                        th:value="${man.id}" 
+                        th:text="${man.name}"></option>
+            </select>
+        </div>
+        
+        <button type="submit">Guardar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha y Hora</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Manicurista</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cita : ${citas}">
+                <td th:text="${cita.id}"></td>
+                <td th:text="${cita.dateHour}"></td>
+                <td th:text="${cita.state}"></td>
+                <td th:text="${cita.clienteId}"></td>
+                <td th:text="${cita.manicuristaId}"></td>
+                <td>
+                    <a th:href="@{/view/citas/editar/{id}(id=${cita.id})}" class="btn btn-edit">Editar</a>
+                    <a th:href="@{/view/citas/eliminar/{id}(id=${cita.id})}" class="btn btn-delete" 
+                       onclick="return confirm('¿Está seguro de eliminar esta cita?')">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
