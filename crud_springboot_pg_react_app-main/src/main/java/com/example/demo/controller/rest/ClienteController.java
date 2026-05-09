@@ -29,17 +29,17 @@ public class ClienteController {
         return clienteService.getAllClientes();
     }
 
-    @GetMapping("/api/{id}")
+    @GetMapping("/{id}")
     public ClienteDTO getClienteById(@PathVariable Long id) {
         return clienteService.getClienteById(id);
     }
 
-    @PutMapping("/api/{id}")
+    @PutMapping("/{id}")
     public ClienteDTO updateCliente(@PathVariable Long id, @Valid @RequestBody ClienteDTO cliente) {
         return clienteService.updateCliente(id, cliente);
     }
 
-    @DeleteMapping("/api/{id}")
+    @DeleteMapping("/{id}")
     public String deleteCliente(@PathVariable Long id) {
         clienteService.deleteCliente(id);
         return "Cliente eliminado";
