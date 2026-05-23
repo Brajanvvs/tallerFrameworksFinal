@@ -17,6 +17,8 @@ public class ClienteDTO {
     @NotBlank(message = "El celular es obligatorio")
     private String cellphone;
 
+    private String password;
+
     private Long superAdministradorId;
 
     public Long getId() {
@@ -57,5 +59,13 @@ public class ClienteDTO {
 
     public void setSuperAdministradorId(Long superAdministradorId) {
         this.superAdministradorId = superAdministradorId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

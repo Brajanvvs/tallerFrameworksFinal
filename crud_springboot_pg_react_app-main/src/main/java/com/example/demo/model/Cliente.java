@@ -14,6 +14,7 @@ public class Cliente {
     private String name;
     private String email;
     private String cellphone;
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "sadmin_id")
@@ -49,6 +50,14 @@ public class Cliente {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public SuperAdministrador getSuperAdministrador() {

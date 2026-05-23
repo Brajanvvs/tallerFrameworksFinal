@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import com.example.demo.dto.ManicuristaDTO;
 import com.example.demo.repository.PropietariaRepository;
@@ -24,7 +25,8 @@ public class ManicuristaViewController {
     }
 
     @GetMapping
-    public String listarManicuristas(Model model) {
+    public String listarManicuristas(Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         model.addAttribute("manicuristas", manicuristaService.getAllManicuristas());
         model.addAttribute("manicurista", new ManicuristaDTO());
         model.addAttribute("propietarias", propietariaRepository.findAll());
@@ -33,7 +35,8 @@ public class ManicuristaViewController {
 
     @PostMapping("/guardar")
     public String guardarManicurista(@Valid @ModelAttribute("manicurista") ManicuristaDTO dto,
-                                      BindingResult result, Model model) {
+                                      BindingResult result, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         if (result.hasErrors()) {
             model.addAttribute("manicuristas", manicuristaService.getAllManicuristas());
             model.addAttribute("propietarias", propietariaRepository.findAll());
@@ -48,16 +51,17 @@ public class ManicuristaViewController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarManicurista(@PathVariable Long id, Model model) {
-        ManicuristaDTO dto = manicuristaService.getManicuristaById(id);
-        model.addAttribute("manicurista", dto);
+    public String editarManicurista(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
+        model.addAttribute("manicurista", manicuristaService.getManicuristaById(id));
         model.addAttribute("manicuristas", manicuristaService.getAllManicuristas());
         model.addAttribute("propietarias", propietariaRepository.findAll());
         return "Manicurista";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarManicurista(@PathVariable Long id) {
+    public String eliminarManicurista(@PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         manicuristaService.deleteManicurista(id);
         return "redirect:/view/manicuristas";
     }

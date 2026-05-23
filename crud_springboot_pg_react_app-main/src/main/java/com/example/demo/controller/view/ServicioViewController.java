@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import com.example.demo.dto.ServicioDTO;
 import com.example.demo.repository.ManicuristaRepository;
@@ -24,7 +25,8 @@ public class ServicioViewController {
     }
 
     @GetMapping
-    public String listarServicios(Model model) {
+    public String listarServicios(Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         model.addAttribute("servicios", servicioService.getAllServicios());
         model.addAttribute("servicio", new ServicioDTO());
         model.addAttribute("manicuristas", manicuristaRepository.findAll());
@@ -33,7 +35,8 @@ public class ServicioViewController {
 
     @PostMapping("/guardar")
     public String guardarServicio(@Valid @ModelAttribute("servicio") ServicioDTO dto,
-                                   BindingResult result, Model model) {
+                                   BindingResult result, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         if (result.hasErrors()) {
             model.addAttribute("servicios", servicioService.getAllServicios());
             model.addAttribute("manicuristas", manicuristaRepository.findAll());
@@ -48,7 +51,8 @@ public class ServicioViewController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarServicio(@PathVariable Long id, Model model) {
+    public String editarServicio(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         model.addAttribute("servicio", servicioService.getServicioById(id));
         model.addAttribute("servicios", servicioService.getAllServicios());
         model.addAttribute("manicuristas", manicuristaRepository.findAll());
@@ -56,7 +60,8 @@ public class ServicioViewController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarServicio(@PathVariable Long id) {
+    public String eliminarServicio(@PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         servicioService.deleteServicio(id);
         return "redirect:/view/servicios";
     }

@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import com.example.demo.dto.CitaDTO;
 import com.example.demo.repository.ClienteRepository;
@@ -28,7 +29,8 @@ public class CitaViewController {
     }
 
     @GetMapping
-    public String listarCitas(Model model) {
+    public String listarCitas(Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         model.addAttribute("citas", citaService.getAllCitas());
         model.addAttribute("cita", new CitaDTO());
         model.addAttribute("clientes", clienteRepository.findAll());
@@ -38,7 +40,8 @@ public class CitaViewController {
 
     @PostMapping("/guardar")
     public String guardarCita(@Valid @ModelAttribute("cita") CitaDTO citaDTO,
-                               BindingResult result, Model model) {
+                               BindingResult result, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         if (result.hasErrors()) {
             model.addAttribute("citas", citaService.getAllCitas());
             model.addAttribute("clientes", clienteRepository.findAll());
@@ -54,9 +57,9 @@ public class CitaViewController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarCita(@PathVariable Long id, Model model) {
-        CitaDTO cita = citaService.getCitaById(id);
-        model.addAttribute("cita", cita);
+    public String editarCita(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
+        model.addAttribute("cita", citaService.getCitaById(id));
         model.addAttribute("citas", citaService.getAllCitas());
         model.addAttribute("clientes", clienteRepository.findAll());
         model.addAttribute("manicuristas", manicuristaRepository.findAll());
@@ -64,7 +67,8 @@ public class CitaViewController {
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarCita(@PathVariable Long id) {
+    public String eliminarCita(@PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         citaService.deleteCita(id);
         return "redirect:/view/citas";
     }

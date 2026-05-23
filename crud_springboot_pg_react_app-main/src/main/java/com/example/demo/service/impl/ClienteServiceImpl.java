@@ -27,6 +27,7 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setName(dto.getName());
         cliente.setEmail(dto.getEmail());
         cliente.setCellphone(dto.getCellphone());
+        cliente.setPassword(dto.getPassword());
 
         Cliente saved = clienteRepository.save(cliente);
 
@@ -74,6 +75,9 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setName(dto.getName());
         cliente.setEmail(dto.getEmail());
         cliente.setCellphone(dto.getCellphone());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            cliente.setPassword(dto.getPassword());
+        }
 
         Cliente updated = clienteRepository.save(cliente);
 

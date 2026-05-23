@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import com.example.demo.dto.PropietariaDTO;
 import com.example.demo.service.PropietariaService;
@@ -20,7 +21,8 @@ public class PropietariaViewController {
     }
 
     @GetMapping
-    public String listarPropietarias(Model model) {
+    public String listarPropietarias(Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         model.addAttribute("propietarias", propietariaService.getAllPropietarias());
         model.addAttribute("propietaria", new PropietariaDTO());
         return "Propietaria";
@@ -28,7 +30,8 @@ public class PropietariaViewController {
 
     @PostMapping("/guardar")
     public String guardarPropietaria(@Valid @ModelAttribute("propietaria") PropietariaDTO dto,
-                                      BindingResult result, Model model) {
+                                      BindingResult result, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         if (result.hasErrors()) {
             model.addAttribute("propietarias", propietariaService.getAllPropietarias());
             return "Propietaria";
@@ -42,15 +45,16 @@ public class PropietariaViewController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarPropietaria(@PathVariable Long id, Model model) {
-        PropietariaDTO dto = propietariaService.getPropietariaById(id);
-        model.addAttribute("propietaria", dto);
+    public String editarPropietaria(@PathVariable Long id, Model model, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
+        model.addAttribute("propietaria", propietariaService.getPropietariaById(id));
         model.addAttribute("propietarias", propietariaService.getAllPropietarias());
         return "Propietaria";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarPropietaria(@PathVariable Long id) {
+    public String eliminarPropietaria(@PathVariable Long id, HttpSession session) {
+        if (session.getAttribute("userName") == null) return "redirect:/view/login";
         propietariaService.deletePropietaria(id);
         return "redirect:/view/propietarias";
     }
