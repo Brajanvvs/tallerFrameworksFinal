@@ -8,7 +8,7 @@ public class CitaDTO {
 
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm[:ss]")
     private LocalDateTime dateHour;
 
     private String state;

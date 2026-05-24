@@ -50,23 +50,39 @@
     <div class="container">
         <h1>Mis Citas</h1>
 
+        <div th:if="${param.error != null}" style="color:red;margin-bottom:10px;padding:10px;background:#ffe0e0;border-radius:5px;">
+            <span th:if="${param.error[0] == 'finde'}">Solo se permiten citas de lunes a viernes.</span>
+            <span th:if="${param.error[0] == 'no-manicurista'}">No hay manicuristas disponibles. Contacta al administrador.</span>
+            <span th:if="${param.error[0] == 'general'}">Error al crear la cita. Intenta de nuevo.</span>
+        </div>
+        <div th:if="${errorCarga != null}" style="color:red;margin-bottom:10px;padding:10px;background:#ffe0e0;border-radius:5px;" th:text="${errorCarga}"></div>
+
         <div class="card">
             <h2>Agendar Nueva Cita</h2>
-            <form th:action="@{/view/mis-citas/agendar}" th:object="${nuevaCita}" method="post">
+            <form th:action="@{/view/mis-citas/agendar}" method="post">
                 <div class="form-group">
-                    <label>Fecha y Hora:</label>
-                    <input type="datetime-local" th:field="*{dateHour}" step="1" required>
+                    <label>Fecha:</label>
+                    <input type="date" name="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>Horario:</label>
+                    <select name="horario" required>
+                        <option value="">Seleccione...</option>
+                        <option value="07:00">7:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Manicurista:</label>
-                    <select th:field="*{manicuristaId}" required>
+                    <select name="manicuristaId" required>
                         <option value="">Seleccione...</option>
                         <option th:each="man : ${manicuristas}"
                                 th:value="${man.id}"
                                 th:text="${man.name}"></option>
                     </select>
                 </div>
-                <input type="hidden" th:field="*{state}" value="PENDIENTE">
                 <button type="submit" class="btn">Agendar Cita</button>
             </form>
         </div>
@@ -88,9 +104,7 @@
                         <td th:text="${cita.dateHour}"></td>
                         <td>
                             <span th:text="${cita.state}"
-                                  th:classappend="${cita.state == 'PENDIENTE'} ? 'pendiente' :
-                                                  ${cita.state == 'CONFIRMADA'} ? 'confirmada' :
-                                                  ${cita.state == 'CANCELADA'} ? 'cancelada' : 'completada'"></span>
+                                  th:classappend="${cita.state == 'PENDIENTE' ? 'pendiente' : cita.state == 'CONFIRMADA' ? 'confirmada' : cita.state == 'CANCELADA' ? 'cancelada' : 'completada'}"></span>
                         </td>
                         <td th:text="${cita.manicurista.name}"></td>
                     </tr>
