@@ -2,10 +2,15 @@ package com.example.demo.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class CitaDTO {
 
     private Long id;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dateHour;
+
     private String state;
     private Long clienteId;
     private Long manicuristaId;
